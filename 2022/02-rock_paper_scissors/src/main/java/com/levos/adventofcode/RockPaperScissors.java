@@ -12,10 +12,10 @@ public class RockPaperScissors {
       'B', RockPaperScissorsShape.PAPER,
       'C', RockPaperScissorsShape.SCISSORS
   );
-  private static final Map<Character, RockPaperScissorsShape> decodingTable = Map.of(
-      'X', RockPaperScissorsShape.ROCK,
-      'Y', RockPaperScissorsShape.PAPER,
-      'Z', RockPaperScissorsShape.SCISSORS
+  private static final Map<Character, RockPaperScissorsOutcome> decodingTable = Map.of(
+      'X', RockPaperScissorsOutcome.LOSS,
+      'Y', RockPaperScissorsOutcome.DRAW,
+      'Z', RockPaperScissorsOutcome.WIN
   );
 
   public int solve(String filepath) {
@@ -34,15 +34,16 @@ public class RockPaperScissors {
     return totalScore;
   }
 
-  private int scoreForRound(char opponentInput, char playerInput) {
+  private int scoreForRound(char opponentInput, char encryptedOutcome) {
     RockPaperScissorsShape opponentShape = inputToShape(opponentInput);
-    RockPaperScissorsShape playerShape = decodeShape(playerInput);
-    RockPaperScissorsOutcome outcome = RockPaperScissorsOutcome.of(playerShape, opponentShape);
+    RockPaperScissorsOutcome outcome = decodeOutcome(encryptedOutcome);
+    RockPaperScissorsShape playerShape = RockPaperScissorsShape.playerShapeForOutcome(opponentShape,
+        outcome);
     return playerShape.score + outcome.score;
   }
 
-  public RockPaperScissorsShape decodeShape(char encryptedShape) {
-    return decodingTable.get(encryptedShape);
+  public RockPaperScissorsOutcome decodeOutcome(char encryptedOutcome) {
+    return decodingTable.get(encryptedOutcome);
   }
 
   public RockPaperScissorsShape inputToShape(char inputChar) {
